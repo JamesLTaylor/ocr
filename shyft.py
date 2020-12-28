@@ -3,9 +3,9 @@ import pytesseract
 from pdf2image import convert_from_path
 import numpy as np
 
-input_pdf = r'C:\Users\James\OneDrive\James\BankStatements\Shyft\2020-12-27 Printed.pdf'
+input_pdf = r'C:\Users\James\OneDrive\James\BankStatements\Shyft\2020-12-27 Virtual Printed.pdf'
 tesseract_exe = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-output_csv = r"C:\Users\James\OneDrive\James\BankStatements\Shyft\2020-12-27.csv"
+output_csv = r"C:\Users\James\OneDrive\James\BankStatements\Shyft\2020-12-27 Virtual.csv"
 
 
 def add_csv_lines(csv_lines, image):
@@ -23,12 +23,13 @@ def add_csv_lines(csv_lines, image):
 
     horizontal_lines = []
     r = 0
-    while r < image_data.shape[0] - 10:
+    max_rows = int(0.92 * image_data.shape[0])  # ignore footer which is yielding some gray
+    while r < max_rows:
         r += 1
         if 255 > image_data[r, 550] > 200 and image_data[r + 5, 550] == 255:
             horizontal_lines.append(r)
             r += 5
-
+    sign = ""
     for h in range(len(horizontal_lines) - 1):
         row = []
         for v in range(len(vertical_lines) - 1):
